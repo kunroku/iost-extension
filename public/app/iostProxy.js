@@ -68,11 +68,16 @@ const DEFAULT_IOST_CONFIG = {
 
 const IOST_NODE_URL = 'https://api.iost.io' //当前节点
 const IOST_TEST_NODE_URL = 'https://test.api.iost.io' //当前节点
+const IOST_LOCAL_NODE_URL = 'http://localhost:30001'
 const IWalletJS = {
   newIOST: IOST => {
     IWalletJS.pack = IOST
     IWalletJS.iost = new IOST.IOST(DEFAULT_IOST_CONFIG)
-    const IOST_PROVIDER = new IOST.HTTPProvider(IWalletJS.network == 'MAINNET' ? IOST_NODE_URL : IOST_TEST_NODE_URL)
+    const IOST_PROVIDER = new IOST.HTTPProvider(
+      IWalletJS.network == 'MAINNET' ? IOST_NODE_URL
+      : IWalletJS.network == 'TESTNET' ? IOST_TEST_NODE_URL
+      : (IWalletJS.account && IWalletJS.account.endpoint) || IOST_LOCAL_NODE_URL
+    )
     IWalletJS.rpc = new IOST.RPC(IOST_PROVIDER)
     IWalletJS.iost.signAndSend = signAndSend
     IWalletJS.iost.signMessage = signMessage
